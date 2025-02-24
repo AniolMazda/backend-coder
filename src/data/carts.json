@@ -1,0 +1,11 @@
+[
+	{
+		"id": 1,
+		"selectedProducts": [
+			{
+				"code": "z1",
+				"quantity": 2
+			}
+		]
+	}
+]

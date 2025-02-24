@@ -1,12 +1,12 @@
 [
 	{
 		"id": 1,
-		"title": "Product 1",
-		"description": "This is a product description",
-		"price": 100,
-		"thumbnail": "../images/product1.jpg",
+		"title": "Product 1.1",
+		"description": "This is a another product description",
+		"price": 150,
+		"thumbnail": "../images/product1-1.jpg",
 		"code": "z1",
-		"stock": 10
+		"stock": 6
 	},
 	{
 		"id": 2,
@@ -14,6 +14,7 @@
 		"description": "This is a product description",
 		"price": 200,
 		"thumbnail": "../images/product2.jpg",
+		"code": "z2",
 		"stock": 7
 	},
 	{
@@ -33,5 +34,23 @@
 		"thumbnail": "../images/product4.jpg",
 		"code": "z4",
 		"stock": 6
+	},
+	{
+		"id": 5,
+		"title": "Product 5",
+		"description": "This is a product description",
+		"price": 800,
+		"thumbnail": "../images/product5.jpg",
+		"code": "z5",
+		"stock": 6
+	},
+	{
+		"id": 6,
+		"title": "Product 6",
+		"description": "This is a product description",
+		"price": 250,
+		"thumbnail": "../images/product6.jpg",
+		"code": "z6",
+		"stock": 8
 	}
 ]

@@ -12,7 +12,7 @@ class ProductManager {
         }
     }
     async addProduct(producto) {
-        let products = await this.getProducts();
+        const products = await this.getProducts();
         let id = 1;
         if(products.length > 0) {
             id = products.length + 1;
@@ -25,9 +25,32 @@ class ProductManager {
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, "\t"));
         return nuevoProducto;
     }
-    async getProductById(id) {
-        let products = await this.getProducts();
-        return products.find(product => product.id == id);
+    async editProduct(producto) {
+        const products = await this.getProducts();
+        let selectProduct = products.find(product => product.id === producto.id);
+        if(!selectProduct){
+            return false;
+        }
+        selectProduct = {...producto};
+        const updateProducts = await products.map((product) => {
+            if(product.id === selectProduct.id){
+                product = {...selectProduct}        
+            }
+            return product;
+        });
+        await fs.promises.writeFile(this.path, JSON.stringify(updateProducts, null, "\t"));
+        return selectProduct;
+    }
+    async deleteProduct(id) {
+        const products = await this.getProducts();
+        const authenProduct = products.find(p => p.id === id);
+        if(!authenProduct){
+            return false;
+        }
+        const resultProducts = products.filter(product => product.id !== id);
+        resultProducts.forEach((product, index) => product.id = index + 1);
+        await fs.promises.writeFile(this.path, JSON.stringify(resultProducts, null, "\t"));
+        return resultProducts;
     }
 }
 
