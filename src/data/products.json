@@ -27,30 +27,21 @@
 		"stock": 5
 	},
 	{
-		"id": 4,
-		"title": "Product 4",
-		"description": "This is a product description",
-		"price": 400,
-		"thumbnail": "../images/product4.jpg",
-		"code": "z4",
-		"stock": 6
-	},
-	{
 		"id": 5,
 		"title": "Product 5",
 		"description": "This is a product description",
-		"price": 800,
+		"price": 300,
 		"thumbnail": "../images/product5.jpg",
 		"code": "z5",
-		"stock": 6
+		"stock": 8
 	},
 	{
 		"id": 6,
 		"title": "Product 6",
 		"description": "This is a product description",
-		"price": 250,
+		"price": 500,
 		"thumbnail": "../images/product6.jpg",
 		"code": "z6",
-		"stock": 8
+		"stock": 4
 	}
 ]

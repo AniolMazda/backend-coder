@@ -14,7 +14,7 @@ class CartManager{
 
     async addCart() {
         const carts = await this.getCarts();
-        let cartId = carts.length + 1;
+        let cartId = Math.max(...carts.map(d=>d.id))+1;
         let newCart = {id:cartId,selectedProducts:[]}
         await carts.push(newCart)
         await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
@@ -27,38 +27,27 @@ class CartManager{
         if(!cart){
             return false;
         }
-        return cart.selectedProducts;
+        return cart;
     }
 
-    async addProductInCart(idCart,codeProduct,quantity){
+    async addProductInCart(idCart,codeProduct){
         const carts = await this.getCarts();
-        let newCarts = carts.filter(cart => cart.id !== idCart);
-        let updateCart;
         const cart = carts.find(cart => cart.id === idCart);
         if(!cart){
             return false;
         }
-        if(cart.selectedProducts.length > 0){
-            const verifyProducts = cart.selectedProducts.find(product => product.code === codeProduct);
-            if(verifyProducts){
-                verifyProducts.quantity += quantity;
-                let updateProduct = {
-                    code:codeProduct,
-                    quantity:verifyProducts.quantity
-                }
-                updateCart = {id:newCarts.length + 1, selectedProducts:[updateProduct]}
-                newCarts.push(updateCart)
-                await fs.promises.writeFile(this.path, JSON.stringify(newCarts, null, "\t"));
-                return updateCart;
-            }
+        const productIndex = cart.selectedProducts.findIndex(p => p.id === parseInt(codeProduct));
+        if (productIndex !== -1) {
+            cart.selectedProducts[productIndex].quantity += 1;
+        } else {
+            const uploadProduct = {
+                id: parseInt(codeProduct),
+                quantity: 1
+            };
+            cart.selectedProducts.push(uploadProduct);
         }
-        const uploadProduct = {
-            code:codeProduct,
-            quantity:quantity
-        }
-        updateCart = {id:newCarts.length + 1, selectedProducts:[uploadProduct]}
-        newCarts.push(updateCart);
-        await fs.promises.writeFile(this.path, JSON.stringify(newCarts, null, "\t"));
+        const updatedCarts = carts.map(c => c.id === cart.id ? cart : c);
+        await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts, null, "\t"));
         return cart;
     }
 }

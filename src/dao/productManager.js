@@ -15,7 +15,7 @@ class ProductManager {
         const products = await this.getProducts();
         let id = 1;
         if(products.length > 0) {
-            id = products.length + 1;
+            id = Math.max(...products.map(d=>d.id))+1;
         }
         let nuevoProducto = {
             id: id,
@@ -48,7 +48,6 @@ class ProductManager {
             return false;
         }
         const resultProducts = products.filter(product => product.id !== id);
-        resultProducts.forEach((product, index) => product.id = index + 1);
         await fs.promises.writeFile(this.path, JSON.stringify(resultProducts, null, "\t"));
         return resultProducts;
     }

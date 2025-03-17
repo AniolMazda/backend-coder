@@ -48,8 +48,7 @@ app.get('/api/carts/:id', async (req, res) => {
 });
 app.post('/api/carts/:cid/product/:pid', async (req, res) => {
     const {cid,pid} = req.params;
-    const {quantity} = req.body;
-    const addProductInCart = await cartManager.addProductInCart(parseInt(cid),pid,quantity);
+    const addProductInCart = await cartManager.addProductInCart(parseInt(cid),pid);
     !addProductInCart ? res.status(400).json({message:'Carrito No encontrado'}) :
     res.status(201).json({
         message:"se ha agregado el producto",
