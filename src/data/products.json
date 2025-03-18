@@ -18,15 +18,6 @@
 		"stock": 7
 	},
 	{
-		"id": 3,
-		"title": "Product 3",
-		"description": "This is a product description",
-		"price": 300,
-		"thumbnail": "../images/product3.jpg",
-		"code": "z3",
-		"stock": 5
-	},
-	{
 		"id": 5,
 		"title": "Product 5",
 		"description": "This is a product description",
@@ -43,5 +34,14 @@
 		"thumbnail": "../images/product6.jpg",
 		"code": "z6",
 		"stock": 4
+	},
+	{
+		"id": 7,
+		"title": "Product 7",
+		"description": "This is a product description",
+		"price": 200,
+		"thumbnail": "../images/product7.jpg",
+		"code": "z7",
+		"stock": 6
 	}
 ]

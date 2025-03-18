@@ -16,7 +16,7 @@ class CartManager{
         const carts = await this.getCarts();
         let cartId = Math.max(...carts.map(d=>d.id))+1;
         let newCart = {id:cartId,selectedProducts:[]}
-        await carts.push(newCart)
+        carts.push(newCart)
         await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
         return newCart;
     }

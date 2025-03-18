@@ -32,7 +32,7 @@ class ProductManager {
             return false;
         }
         selectProduct = {...producto};
-        const updateProducts = await products.map((product) => {
+        const updateProducts = products.map((product) => {
             if(product.id === selectProduct.id){
                 product = {...selectProduct}        
             }
