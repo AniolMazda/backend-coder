@@ -23,7 +23,7 @@ class ProductManager {
         }
         products.push(nuevoProducto);
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, "\t"));
-        return nuevoProducto;
+        return products;
     }
     async editProduct(producto) {
         const products = await this.getProducts();

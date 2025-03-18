@@ -1,13 +1,9 @@
-<h1>Todos los Productos</h1>
+<h1>Todos los Productos con Websockets</h1>
 <hr>
-<ol>
+<ol id="productList">
     {{#each products}}
-        <li>
-            <h2>{{title}}</h2>
-            <p>{{description}}</p>
-            <p><strong>{{price}}</strong></p>
-            <p><i>{{code}}</i></p>
-            <p>{{stock}}</p>
-        </li>
+        <li>{{title}}</li>
     {{/each}}
 </ol>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/ws.js"></script>

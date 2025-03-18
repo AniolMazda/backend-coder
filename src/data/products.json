@@ -1,9 +1,9 @@
 [
 	{
 		"id": 1,
-		"title": "Product 1.1",
+		"title": "Product 1.2",
 		"description": "This is a another product description",
-		"price": 150,
+		"price": 180,
 		"thumbnail": "../images/product1-1.jpg",
 		"code": "z1",
 		"stock": 6
@@ -43,5 +43,23 @@
 		"thumbnail": "../images/product7.jpg",
 		"code": "z7",
 		"stock": 6
+	},
+	{
+		"id": 8,
+		"title": "Product 8",
+		"description": "This is a product description",
+		"price": 260,
+		"thumbnail": "../images/product8.jpg",
+		"code": "z8",
+		"stock": 12
+	},
+	{
+		"id": 9,
+		"title": "Product 9",
+		"description": "This is a product description",
+		"price": 300,
+		"thumbnail": "../images/product9.jpg",
+		"code": "z9",
+		"stock": 15
 	}
 ]
