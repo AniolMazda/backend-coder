@@ -1,5 +1,5 @@
-const {Router} = require('express')
-const {ProductManager} = require('../dao/productManager');
+import {Router} from 'express'
+import ProductManager from '../dao/productManager.js'
 const productManager = new ProductManager('./src/data/products.json');
 
 const router = Router()
@@ -80,4 +80,4 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-module.exports=router
+export {router as "routerProduct"}

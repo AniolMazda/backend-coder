@@ -1,6 +1,6 @@
-const fs = require("fs");
+import fs from 'fs'
 
-class CartManager{
+export default class CartManager{
     
     constructor(rutaArchivo) {
         this.path = rutaArchivo;
@@ -50,8 +50,4 @@ class CartManager{
         await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts, null, "\t"));
         return cart;
     }
-}
-
-module.exports = {
-    CartManager
 }

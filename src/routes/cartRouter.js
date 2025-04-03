@@ -1,5 +1,5 @@
-const {Router} = require('express')
-const {CartManager} = require('../dao/cartManager');
+import {Router} from 'express'
+import CartManager from '../dao/cartManager.js'
 const cartManager = new CartManager('./src/data/carts.json');
 
 const router = Router()
@@ -27,4 +27,4 @@ router.post('/:cid/product/:pid', async (req, res) => {
     });
 });
 
-module.exports=router
+export {router as routerCart}

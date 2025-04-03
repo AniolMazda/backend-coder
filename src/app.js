@@ -1,9 +1,9 @@
-const express=require('express')
-const {Server} = require('socket.io')
-const {engine} = require('express-handlebars') 
-const routerProduct = require('./routes/productRouter')
-const routerCart = require('./routes/cartRouter')
-const viewsProductRouter = require('./routes/viewsProductRouter')
+import express from 'express'
+import { Server } from 'socket.io'
+import { engine } from 'express-handlebars'
+import {routerProduct} from './routes/productRouter.js'
+import {routerCart} from './routes/cartRouter.js'
+import {viewsProductRouter} from './routes/viewsProductRouter.js'
 
 let io
 const PORT = 8080
