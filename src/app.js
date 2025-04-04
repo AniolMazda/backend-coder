@@ -1,13 +1,29 @@
 import express from 'express'
+import mongoose from 'mongoose'
 import { Server } from 'socket.io'
 import { engine } from 'express-handlebars'
 import {routerProduct} from './routes/productRouter.js'
 import {routerCart} from './routes/cartRouter.js'
 import {viewsProductRouter} from './routes/viewsProductRouter.js'
+import {config} from './config/config.js'
 
 let io
-const PORT = 8080
+const PORT = config.PORT
 const app = express()
+const MongoDB = async () => {
+    try{
+        await mongoose.connect(
+            config.MONGO_URI,{
+                dbName:config.MONGODB_NAME
+            }
+        )
+        console.log("Se ha hecho la conexión con la base de datos")
+    }
+    catch(error){
+        console.error("No se pudo realizar la conexión"+error.message)
+    }
+}
+MongoDB()
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))

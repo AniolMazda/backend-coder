@@ -1,12 +1,12 @@
 import {Router} from 'express'
-import ProductManager from '../dao/productManager.js'
-const productManager = new ProductManager('./src/data/products.json');
+import { isValidObjectId } from 'mongoose'
+import ProductManager from '../dao/productManagerDB.js'
 
 const router = Router()
 
 router.get('/', async (req, res) => {
     try{
-        const products = await productManager.getProducts();
+        const products = await ProductManager.get();
         res.setHeader('Content-Type', 'application/json');
         return res.status(200).json(products);
     }
@@ -16,12 +16,19 @@ router.get('/', async (req, res) => {
     }
 });
 router.get('/:id', async (req, res) => {
-    try{
-        const {id} = req.params;
-        const products = await productManager.getProducts();
-        const productFilter = await products.find(u => u.id === parseInt(id));
+    const {id} = req.params;
+    if(!isValidObjectId(id)){
         res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json(productFilter);
+        return res.status(400).json("El Id que escribiste es invalido");
+    }
+    const product = await ProductManager.getBy({_id:id});
+    if(!product){
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(404).json("El Producto que esta buscando no existe");
+    }
+    try{
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(200).json(product);
     }
     catch{
         res.setHeader('Content-Type', 'application/json');
@@ -29,14 +36,22 @@ router.get('/:id', async (req, res) => {
     }
 });
 router.post('/', async (req, res) => {
+    const {title,description,price,thumbnail,code,stock} = req.body
+    if(!title || !price || !code){
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(400).json("Los campos Title, Price y Code son obligatorios");
+    }
     try{
-        const newProduct = req.body;
-        const addProduct = await productManager.addProduct(newProduct)
-        let lastProduct = addProduct.slice(-1)
+        const validarExistencia = await ProductManager.getBy({code})
+        if(validarExistencia){
+            res.setHeader('Content-Type', 'application/json');
+            return res.status(400).json("El producto que intenta agregar ya existe");
+        }
+        const addProduct = await ProductManager.add({title,description,price,thumbnail,code,stock})
         req.io.emit('updateProduct',addProduct)
         res.setHeader('Content-Type', 'application/json');
         return res.status(201).json({message:"El producto ha sido agregado exitosamente",
-            lastProduct});
+            addProduct});
     }
     catch{
         res.setHeader('Content-Type', 'application/json');
@@ -44,39 +59,52 @@ router.post('/', async (req, res) => {
     }
 });
 router.put('/:id', async (req, res) => {
-    try{
-        const {id} = req.params;
-        const modifyProduct = req.body;
-        const products = await productManager.editProduct({id:parseInt(id), ...modifyProduct});
-        if(!products){
-            res.status(400).json({message:'Producto No encontrado'})
-        }
+    const {id} = req.params;
+    const updateProduct = req.body
+    if(!isValidObjectId(id)){
         res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json(products);
+        return res.status(400).json("El Id que escribiste es invalido")
+    }
+    const verifyProduct = await ProductManager.getBy({_id:id})
+    if(!verifyProduct){
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(404).json("El Producto que vas a actualizar no existe")
+    }
+    const products = await ProductManager.get()
+    let sameCode = products.some(u=>u.code===updateProduct.code)
+    if(sameCode){
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(400).json("El Code que deseabas agregar ya existe y no se puede repetir")
+    }
+    try{
+        const modifyProduct = await ProductManager.update(id,updateProduct)
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(200).json({message:"El producto ha sido modificado",modifyProduct})
     }
     catch{
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(500).json({Error: "Internal Server Error"});
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(500).json({Error: "Internal Server Error"})
     }
 });
 router.delete('/:id', async (req, res) => {
-    try{
-        const {id} = req.params;
-        const products = await productManager.getProducts();
-        let deletedProduct = await products.find(u => u.id === parseInt(id));
-        const deleteProduct = await productManager.deleteProduct(parseInt(id));
-        if(!deleteProduct){
-            res.status(400).json({message:'Producto No encontrado'})
-        }
-        req.io.emit('updateProduct',deleteProduct)
+    const {id} = req.params;
+    if(!isValidObjectId(id)){
         res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json({message:"El siguiente producto fue eliminado",
-            deletedProduct
-        });
+        return res.status(400).json("El Id que escribiste es invalido")
+    }
+    const verifyProduct = await ProductManager.getBy({_id:id})
+    if(!verifyProduct){
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(404).json("El Producto que vas a eliminar no existe")
+    }
+    try{
+        const deleteProduct = await ProductManager.delete(id)
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(200).json({message:"El producto ha sido eliminado",deleteProduct})
     }
     catch{
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(500).json({Error: "Internal Server Error"});
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(500).json({Error: "Internal Server Error"})
     }
 });
 
