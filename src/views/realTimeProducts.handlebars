@@ -2,7 +2,12 @@
 <hr>
 <ol id="productList">
     {{#each products}}
-        <li>{{title}}</li>
+        <li>
+            <div>
+                <h2>{{title}}</h2>
+                <p>{{price}}</p>
+            </div>
+        </li>
     {{/each}}
 </ol>
 <script src="/socket.io/socket.io.js"></script>

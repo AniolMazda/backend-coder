@@ -2,8 +2,16 @@ import { productModel } from "./models/productModel.js"
 
 export default class ProductManager {
 
-    static async get() {
-        return await productModel.find().lean()
+    static async get(page=1,limit=10,sortvalue,filter) {
+        let options = {
+            page,
+            limit,
+            lean:true
+        }
+        if(sortvalue !== undefined){
+            options.sort = {"price":sortvalue}
+        }
+        return await productModel.paginate(filter, options)
     }
 
     static async getSelect(filter={}){

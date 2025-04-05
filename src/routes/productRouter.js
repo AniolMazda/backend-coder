@@ -6,13 +6,29 @@ const router = Router()
 
 router.get('/', async (req, res) => {
     try{
-        const products = await ProductManager.get();
+        let {page} = req.query
+        if(!page){
+            page=1
+        }
+        const {totalPages, hasNextPage, nextPage, hasPrevPage, prevPage} = await ProductManager.get(page);
+        let prevLink = !hasPrevPage ? null : `/?page=${prevPage}`,
+            nextLink = !hasNextPage ? null : `/?page=${nextPage}`
         res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json(products);
+        return res.status(200).json({status:"success",
+            payload: "Resultado de los productos solicitados",
+            totalPages,
+            prevPage,
+            nextPage,
+            page:parseInt(page),
+            hasPrevPage,
+            hasNextPage,
+            prevLink,
+            nextLink
+        });
     }
     catch{
         res.setHeader('Content-Type', 'application/json');
-        return res.status(500).json({Error: "Internal Server Error"});
+        return res.status(500).json({status: "Error"});
     }
 });
 router.get('/:id', async (req, res) => {

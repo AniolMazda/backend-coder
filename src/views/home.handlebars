@@ -1,13 +1,35 @@
 <h1>Todos los Productos</h1>
 <hr>
-<ol>
-    {{#each products}}
-        <li>
-            <h2>{{title}}</h2>
-            <p>{{description}}</p>
-            <p><strong>{{price}}</strong></p>
-            <p><i>{{code}}</i></p>
-            <p>{{stock}}</p>
-        </li>
-    {{/each}}
-</ol>
+
+<div>
+  {{#each products}}
+    <div>
+      <h2>{{title}}</h2>
+      <p>Precio: ${{price}}</p>
+      <a href="/product/{{_id}}">
+        Ver más
+      </a>
+       <form action="/api/carts/" method="POST">
+        <input type="hidden" name="productId" value="{{this._id}}">
+        <button type="submit">
+          Agregar al carrito 🛒
+        </button>
+      </form>
+    </div>
+  {{/each}}
+</div>
+
+<!-- PAGINACIÓN -->
+<div>
+    <a href="/?page=1">Ir Pag 1</a>
+  {{#if hasPrevPage}}
+    <a href="?page={{prevPage}}">⬅ Página anterior</a>
+  {{/if}}
+
+  <span>Página {{page}} de {{totalPages}}</span>
+
+  {{#if hasNextPage}}
+    <a href="?page={{nextPage}}">Página siguiente ➡</a>
+  {{/if}}
+    <a href="/?page={{totalPages}}">Ir Ult. Pag</a>
+</div>
