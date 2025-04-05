@@ -16,7 +16,7 @@ export default class CartManager{
     }
 
     static async add() {
-        return await cartModel.create()
+        return await cartModel.create({})
     }
 
     static async addProduct(cid,pid){
@@ -36,24 +36,54 @@ export default class CartManager{
     }
 
     static async updateProduct(id,modify){
-        const cart = await this.getBy({_id:id})
-        const productIndex = cart.find(c=>modify.find(m=>c.product === m.product))
-        console.log(modify,productIndex)
-        /*if (productIndex !== -1) {
-            cart.selectedProduct[productIndex].quantity += 1;
+        const cart = await this.getBy({_id:id});
+        const cartMap = new Map(
+            cart.selectedProduct.map(item => [item.product.toString(), item])
+        )
+        for (const mod of modify) {
+            const modProductId = mod.product;
+            if (cartMap.has(modProductId)) {
+                // Ya existe: actualizar cantidad
+                cartMap.get(modProductId).quantity += mod.quantity;
+            } else {
+                // No existe: agregar al carrito
+                cart.selectedProduct.push({
+                    product: mod.product,
+                    quantity: mod.quantity,
+                });
+            }
+        }
+        return await cartModel.findByIdAndUpdate(id, { selectedProduct: cart.selectedProduct }, { new: true }).lean();
+    }
+
+    static async updateOneProduct(cid,pid,q){
+        const cart = await this.getBy({_id:cid})
+        const productIndex = cart.selectedProduct.findIndex(p => p.product.toString() === pid);
+        if (productIndex !== -1) {
+            cart.selectedProduct[productIndex].quantity += q.quantity;
         } else {
             const uploadProduct = {
                 product: pid,
-                quantity: 1
+                quantity: q.quantity
             };
             cart.selectedProduct.push(uploadProduct);
         }
 
-        return await cartModel.findByIdAndUpdate(cid, { selectedProduct: cart.selectedProduct }, { new: true }).lean();*/
-        //return await cartModel.findByIdAndUpdate(id,{selectedProduct: modify},{new:true}).lean()
+        return await cartModel.findByIdAndUpdate(cid, { selectedProduct: cart.selectedProduct }, { new: true }).lean();
     }
 
     static async delete(id){
-        return await cartModel.findByIdAndDelete(id).lean()
+        return await cartModel.findByIdAndUpdate(
+            id,
+            { $set: {selectedProduct: [] }},
+            { new: true }
+        ).lean()
+    }
+    static async deleteProduct(cid,pid){
+        return await cartModel.findByIdAndUpdate(
+            cid,
+            { $pull: { selectedProduct: { product: pid } } },
+            { new: true }
+        );
     }
 }

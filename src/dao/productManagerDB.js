@@ -6,6 +6,10 @@ export default class ProductManager {
         return await productModel.find().lean()
     }
 
+    static async getSelect(filter={}){
+        return await productModel.find(filter).select('_id')
+    }
+
     static async getBy(filter={}){
         return await productModel.findOne(filter).lean()
     }
