@@ -86,7 +86,7 @@ router.put('/:id', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         return res.status(404).json("El Producto que vas a actualizar no existe")
     }
-    const products = await ProductManager.get()
+    const {docs:products} = await ProductManager.get()
     let sameCode = products.some(u=>u.code===updateProduct.code)
     if(sameCode){
         res.setHeader('Content-Type', 'application/json');
